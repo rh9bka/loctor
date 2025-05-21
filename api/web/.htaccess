@@ -1,0 +1,25 @@
+RewriteEngine on
+
+# Если запрашиваемый файл или директория существуют, используем их напрямую
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Иначе перенаправляем на index.php
+RewriteRule . index.php
+
+# Запрещаем доступ к .htaccess
+<Files .htaccess>
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Запрещаем доступ к файлам с определенными расширениями
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Разрешаем CORS
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header set Access-Control-Allow-Headers "Content-Type, Authorization" 

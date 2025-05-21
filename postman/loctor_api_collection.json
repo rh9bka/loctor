@@ -1,0 +1,246 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890",
+		"name": "Loctor API",
+		"description": "API для доски объявлений",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Аутентификация",
+			"item": [
+				{
+					"name": "Регистрация",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phone\": \"79001234567\",\n    \"password\": \"password123\",\n    \"password_confirm\": \"password123\",\n    \"fname\": \"Иван\",\n    \"lname\": \"Иванов\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "register"]
+						},
+						"description": "Регистрация нового пользователя"
+					}
+				},
+				{
+					"name": "Подтверждение регистрации",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": 1,\n    \"code\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/verify",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "verify"]
+						},
+						"description": "Подтверждение регистрации по SMS коду"
+					}
+				},
+				{
+					"name": "Авторизация",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phone\": \"79001234567\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "login"]
+						},
+						"description": "Авторизация пользователя"
+					}
+				}
+			]
+		},
+		{
+			"name": "Объявления",
+			"item": [
+				{
+					"name": "Список объявлений",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/ads?page=1&per-page=20",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "ads"],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "per-page",
+									"value": "20"
+								}
+							]
+						},
+						"description": "Получение списка активных объявлений"
+					}
+				},
+				{
+					"name": "Мои объявления",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/ads/my-ads?status=active&page=1&per-page=20",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "ads", "my-ads"],
+							"query": [
+								{
+									"key": "status",
+									"value": "active"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "per-page",
+									"value": "20"
+								}
+							]
+						},
+						"description": "Получение списка объявлений пользователя"
+					}
+				},
+				{
+					"name": "Просмотр объявления",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/ads/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "ads", "1"]
+						},
+						"description": "Получение информации об объявлении"
+					}
+				},
+				{
+					"name": "Создание объявления",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Продам iPhone 12\",\n    \"description\": \"Продаю iPhone 12 в отличном состоянии\",\n    \"price\": 50000,\n    \"category_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/ads",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "ads"]
+						},
+						"description": "Создание нового объявления"
+					}
+				},
+				{
+					"name": "Обновление объявления",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Продам iPhone 12 (обновлено)\",\n    \"description\": \"Продаю iPhone 12 в отличном состоянии. Цена снижена!\",\n    \"price\": 45000,\n    \"category_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/ads/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "ads", "1"]
+						},
+						"description": "Обновление существующего объявления"
+					}
+				},
+				{
+					"name": "Удаление объявления",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/ads/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "ads", "1"]
+						},
+						"description": "Удаление объявления"
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "your_auth_token_here",
+			"type": "string"
+		}
+	]
+} 
