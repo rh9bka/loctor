@@ -21,6 +21,16 @@ class CategoriesController extends BaseController
         return $actions;
     }
 
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        // Отключаем аутентификацию для дерева категорий
+        if (isset($behaviors['authenticator'])) {
+            $behaviors['authenticator']['optional'][] = 'tree';
+        }
+        return $behaviors;
+    }
+
     public function actionTree()
     {
         $categories = Category::find()->orderBy('parent_id, name')->all();

@@ -18,6 +18,7 @@ class Category extends ActiveRecord
             [['name'], 'required'],
             [['name'], 'string', 'max' => 255],
             [['parent_id'], 'integer'],
+            [['svg'], 'string'],
             [['parent_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['parent_id' => 'id']],
         ];
     }
@@ -28,6 +29,7 @@ class Category extends ActiveRecord
             'id' => 'ID',
             'name' => 'Название',
             'parent_id' => 'Родительская категория',
+            'svg' => 'SVG',
         ];
     }
 
