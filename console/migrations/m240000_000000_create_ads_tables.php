@@ -9,6 +9,7 @@ class m240000_000000_create_ads_tables extends Migration
         $this->createTable('{{%categories}}', [
             'id' => $this->primaryKey(),
             'name' => $this->string(255)->notNull(),
+            'svg' => $this->text()->defaultValue(null),
             'parent_id' => $this->integer()->null(),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),

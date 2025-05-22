@@ -91,6 +91,18 @@ return [
                         'GET slug/{slug}' => 'view-by-slug',
                     ],
                 ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => ['v1/categories'],
+                    'pluralize' => false,
+                ],
+                'v1/categories' => [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'v1/categories',
+                    'patterns' => [
+                        'GET tree' => 'tree',
+                    ],
+                ],
             ],
         ],
     ],
