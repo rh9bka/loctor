@@ -61,8 +61,7 @@ class Ad extends ActiveRecord
             [['description'], 'string'],
             [['price'], 'number'],
             [['category_id', 'user_id', 'status'], 'integer'],
-            [['title', 'slug', 'location', 'phone', 'email'], 'string', 'max' => 255],
-            [['email'], 'email'],
+            [['title', 'slug'], 'string', 'max' => 255],
             [['slug'], 'unique'],
             [['imageFiles'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, gif', 'maxFiles' => 10],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Category::class, 'targetAttribute' => ['category_id' => 'id']],
@@ -83,9 +82,6 @@ class Ad extends ActiveRecord
             'created_at' => 'Дата создания',
             'updated_at' => 'Дата обновления',
             'slug' => 'Slug',
-            'location' => 'Локация',
-            'phone' => 'Телефон',
-            'email' => 'Email',
             'imageFiles' => 'Изображения',
         ];
     }
