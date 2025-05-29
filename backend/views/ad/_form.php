@@ -42,7 +42,7 @@ $statusOptions = [
                     ) ?>
 
                     <?= $form->field($model, 'user_id')->dropDownList(
-                        ArrayHelper::map(User::find()->limit(100)->all(), 'id', 'username'),
+                        ArrayHelper::map(User::find()->limit(100)->all(), 'id', 'lname'),
                         ['prompt' => 'Выберите пользователя']
                     ) ?>
 

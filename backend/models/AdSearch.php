@@ -9,9 +9,17 @@ use common\models\Ad;
 /**
  * AdSearch represents the model behind the search form of `common\models\Ad`.
  */
-class AdSearch extends Ad
+class AdSearch extends Model
 {
+    public $id;
+    public $user_id;
+    public $category_id;
+    public $status;
+    public $title;
+    public $slug;
+    public $description;
     public $date_range;
+    public $price;
 
     /**
      * {@inheritdoc}
@@ -20,7 +28,7 @@ class AdSearch extends Ad
     {
         return [
             [['id', 'user_id', 'category_id', 'status'], 'integer'],
-            [['title', 'slug', 'description', 'location', 'phone', 'email', 'date_range'], 'safe'],
+            [['title', 'slug', 'description', 'date_range'], 'safe'],
             [['price'], 'number'],
         ];
     }
@@ -44,15 +52,13 @@ class AdSearch extends Ad
     public function search($params)
     {
         $query = Ad::find();
-
-        // add conditions that should always apply here
         $query->joinWith(['category', 'user']);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'sort' => [
                 'defaultOrder' => [
-                    'created_at' => SORT_DESC,
+                    'id' => SORT_DESC,
                 ]
             ],
             'pagination' => [
@@ -63,33 +69,28 @@ class AdSearch extends Ad
         $this->load($params);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
             return $dataProvider;
         }
 
-        // grid filtering conditions
         $query->andFilterWhere([
-            'ad.id' => $this->id,
-            'ad.user_id' => $this->user_id,
-            'ad.category_id' => $this->category_id,
-            'ad.price' => $this->price,
-            'ad.status' => $this->status,
+            'ads.id' => $this->id,
+            'ads.user_id' => $this->user_id,
+            'ads.category_id' => $this->category_id,
+            'ads.price' => $this->price,
+            'ads.status' => $this->status,
         ]);
 
-        $query->andFilterWhere(['like', 'ad.title', $this->title])
-            ->andFilterWhere(['like', 'ad.slug', $this->slug])
-            ->andFilterWhere(['like', 'ad.description', $this->description])
-            ->andFilterWhere(['like', 'ad.location', $this->location])
-            ->andFilterWhere(['like', 'ad.phone', $this->phone])
-            ->andFilterWhere(['like', 'ad.email', $this->email]);
+        $query->andFilterWhere(['like', 'ads.title', $this->title])
+            ->andFilterWhere(['like', 'ads.slug', $this->slug])
+            ->andFilterWhere(['like', 'ads.description', $this->description]);
 
         // Обрабатываем диапазон дат
         if (!empty($this->date_range)) {
             $dates = explode(' - ', $this->date_range);
             if (count($dates) == 2) {
-                $query->andFilterWhere(['>=', 'ad.created_at', $dates[0] . ' 00:00:00'])
-                      ->andFilterWhere(['<=', 'ad.created_at', $dates[1] . ' 23:59:59']);
+                $query->andFilterWhere(['>=', 'ads.created_at', $dates[0] . ' 00:00:00'])
+                      ->andFilterWhere(['<=', 'ads.created_at', $dates[1] . ' 23:59:59']);
             }
         }
 

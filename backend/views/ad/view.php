@@ -77,7 +77,7 @@ $statusLabels = [
             [
                 'attribute' => 'user_id',
                 'value' => function($model) {
-                    return $model->user ? $model->user->username : 'Неизвестный пользователь';
+                    return $model->user ? $model->user->lname : 'Неизвестный пользователь';
                 },
             ],
             'location',
@@ -127,7 +127,7 @@ $statusLabels = [
                     <?php foreach ($model->adLogs as $log): ?>
                     <tr>
                         <td><?= Yii::$app->formatter->asDatetime($log->created_at) ?></td>
-                        <td><?= $log->user ? $log->user->username : 'Система' ?></td>
+                        <td><?= $log->user ? $log->user->lname : 'Система' ?></td>
                         <td><?= Html::encode($log->action) ?></td>
                     </tr>
                     <?php endforeach; ?>

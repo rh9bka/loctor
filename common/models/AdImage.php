@@ -85,26 +85,26 @@ class AdImage extends ActiveRecord
     public function saveImage($file)
     {
         $this->filename = Yii::$app->security->generateRandomString() . '.' . $file->extension;
-
-        // Создаем директорию, если её нет
-        $uploadPath = Yii::getAlias('@frontend/web/uploads/ads/' . $this->ad_id);
+        $date = date('Y/m/d');
+        $uploadPath = Yii::getAlias('@frontend/web/uploads/ads/' . $date);
         FileHelper::createDirectory($uploadPath);
-
         if ($file->saveAs($uploadPath . '/' . $this->filename)) {
+            // Сохраняем путь относительно uploads/ads/
+            $this->filename = $date . '/' . $this->filename;
             return $this->save(false);
         }
-
         return false;
     }
 
     /**
-     * Возвращает URL изображения
+     * Возвращает абсолютный URL изображения
      * 
      * @return string URL изображения
      */
     public function getImageUrl()
     {
-        return Yii::getAlias('@web/uploads/ads/' . $this->ad_id . '/' . $this->filename);
+        $host = Yii::$app->params['frontendHostInfo'] ?? '';
+        return rtrim($host, '/') . '/uploads/ads/' . ltrim($this->filename, '/');
     }
 
     /**
@@ -113,9 +113,7 @@ class AdImage extends ActiveRecord
     public function afterDelete()
     {
         parent::afterDelete();
-
-        // Удаляем файл с сервера
-        $filePath = Yii::getAlias('@frontend/web/uploads/ads/' . $this->ad_id . '/' . $this->filename);
+        $filePath = Yii::getAlias('@frontend/web/uploads/ads/' . $this->filename);
         if (file_exists($filePath)) {
             unlink($filePath);
         }
