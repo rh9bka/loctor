@@ -44,18 +44,36 @@ class AdsController extends BaseController
     public function actionIndex()
     {
         $query = Ad::find()->where(['status' => Ad::STATUS_ACTIVE]);
-        
-        return new ActiveDataProvider([
+        // Позволяем явно задавать pageSize через GET-параметр per-page (стандарт yii2)
+        $pageSize = Yii::$app->request->get('per-page');
+        $pagination = [];
+        if ($pageSize !== null) {
+            $pagination['pageSize'] = (int)$pageSize;
+        } else {
+            $pagination['pageSize'] = 20;
+        }
+        // Получаем текущую страницу (yii2 ожидает 0-based)
+        $page = Yii::$app->request->get('page');
+        if ($page !== null) {
+            // В API page обычно 1-based, а в yii2 0-based
+            $pagination['page'] = max(0, (int)$page - 1);
+        }
+        $provider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => [
-                'pageSize' => 20,
-            ],
+            'pagination' => $pagination,
             'sort' => [
                 'defaultOrder' => [
                     'created_at' => SORT_DESC,
                 ]
             ],
         ]);
+        // Стандартизируем ответ для фронта: всегда отдаём items, total, page, per-page
+        return [
+            'items' => $provider->getModels(),
+            'total' => $provider->getTotalCount(),
+            'page' => isset($pagination['page']) ? $pagination['page'] + 1 : 1,
+            'per-page' => $pagination['pageSize'],
+        ];
     }
 
     public function actionMyAds()
